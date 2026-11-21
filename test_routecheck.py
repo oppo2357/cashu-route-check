@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 from routecheck import verdict
@@ -11,6 +12,19 @@ ROOT = Path(__file__).resolve().parent
 
 
 class RouteTests(unittest.TestCase):
+    def test_conflicting_disabled_flags_fail_ci(self):
+        sample = (ROOT / "examples/before.json").read_text()
+        with tempfile.TemporaryDirectory() as directory:
+            snapshot = Path(directory) / "ambiguous.json"
+            snapshot.write_text(sample.replace('"disabled": false', '"disabled": true, "disabled": false', 1))
+            result = subprocess.run(
+                [sys.executable, "routecheck.py", "routes.json", str(snapshot)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("duplicate JSON field 'disabled'", result.stderr)
+        self.assertEqual(result.stdout, "")
+
     def test_demo(self):
         for snapshot, expected_code in [("before", 0), ("candidate", 1)]:
             with self.subTest(snapshot=snapshot):

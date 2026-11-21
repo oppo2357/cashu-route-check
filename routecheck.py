@@ -5,6 +5,15 @@ from pathlib import Path
 import sys
 
 
+def unique_fields(pairs):
+    obj = {}
+    for name, value in pairs:
+        if name in obj:
+            raise ValueError(f"duplicate JSON field {name!r}")
+        obj[name] = value
+    return obj
+
+
 def integer(value):
     return type(value) is int and value >= 0
 
@@ -50,7 +59,7 @@ def main():
     parser.add_argument("--before", type=Path, help="Earlier /v1/info JSON for comparison")
     args = parser.parse_args()
     def load(path):
-        return json.loads(path.read_text(encoding="utf-8-sig"))
+        return json.loads(path.read_text(encoding="utf-8-sig"), object_pairs_hook=unique_fields)
     try:
         routes, current = load(args.routes), load(args.snapshot)
         before = load(args.before) if args.before else None

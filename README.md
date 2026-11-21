@@ -15,9 +15,11 @@ These two synthetic snapshots differ in one value. Mint stays advertised; melt c
 ```sh
 curl -fsS https://testnut.cashu.space/v1/info > mint-info.json
 python routecheck.py routes.json mint-info.json
-python routecheck.py routes.json candidate-info.json --before mint-info.json
+python routecheck.py routes.json mint-info.json --before examples/before.json
 ```
 
 The JSON output includes the current verdict, the reason, and the previous verdict when a comparison is requested. Exit 0 means every route is advertised within published limits. Exit 1 means at least one is blocked or unknown. Exit 2 identifies invalid input. Each invocation works offline with saved metadata.
+
+In CI, run the CLI directly as a build step. Redirect stdout to a file to retain the route report while preserving the exit status. Duplicate JSON fields produce exit 2 because different readers can interpret the same snapshot differently.
 
 The checks cover the method, unit, operation-wide disable switch and amount boundaries in [NUT-04](https://github.com/cashubtc/nuts/blob/main/04.md#settings) and [NUT-05](https://github.com/cashubtc/nuts/blob/main/05.md#settings). An advertised route still needs a successful quote and execution. Liquidity, fees, authentication and method-specific options are outside this check.
