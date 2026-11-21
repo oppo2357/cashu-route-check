@@ -31,6 +31,12 @@ class RouteTests(unittest.TestCase):
             with self.subTest(amount=amount):
                 self.assertEqual(verdict(info, dict(route, amount=amount))[0], expected)
 
+    def test_invalid_mint_limits_preserve_melt_result(self):
+        info = json.loads((ROOT / "examples/inverted.json").read_text())
+        mint, melt = json.loads((ROOT / "routes.json").read_text())
+        self.assertEqual(verdict(info, mint), ("unknown", "inverted limits"))
+        self.assertEqual(verdict(info, melt)[0], "advertised")
+
 
 if __name__ == "__main__":
     unittest.main()
