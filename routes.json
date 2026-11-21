@@ -1,0 +1,4 @@
+[
+  {"operation": "mint", "method": "bolt11", "unit": "sat", "amount": 20},
+  {"operation": "melt", "method": "bolt11", "unit": "sat", "amount": 20}
+]

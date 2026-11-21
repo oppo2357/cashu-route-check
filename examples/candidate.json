@@ -1,0 +1,26 @@
+{
+  "nuts": {
+    "4": {
+      "disabled": false,
+      "methods": [
+        {
+          "method": "bolt11",
+          "unit": "sat",
+          "min_amount": 1,
+          "max_amount": 500000
+        }
+      ]
+    },
+    "5": {
+      "disabled": false,
+      "methods": [
+        {
+          "method": "bolt11",
+          "unit": "sat",
+          "min_amount": 21,
+          "max_amount": 500000
+        }
+      ]
+    }
+  }
+}
